@@ -1,0 +1,33 @@
+{
+    "version": "0.0.1",
+    "description": "A basic mobile backend for Azure App Service",
+    "main": "server.js",
+    "engines": {
+        "node": ">6.2.0",
+        "npm": ">3.9.0"
+    },
+    "private": true,
+    "scripts": {
+        "start": "node ./server.js",
+        "pretest": "eslint server test",
+        "test": "mocha"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "azure-mobile-apps": "^3.0.0",
+        "body-parser": "^1.15.2",
+        "compression": "^1.6.2",
+        "config": "^1.21.0",
+        "express": "^4.14.0",
+        "express-winston": "^2.0.0",
+        "serve-static": "^1.11.1",
+        "shell-arguments": "^1.1.9",
+        "winston": "^2.2.0"
+    },
+    "devDependencies": {
+        "mocha": "^3.0.2",
+        "chai": "^3.5.0",
+        "eslint": "^3.5.0",
+        "sqlite": "^2.2.0"
+    }
+}
