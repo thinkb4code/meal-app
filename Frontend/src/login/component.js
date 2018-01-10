@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image, TouchableHighlight} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 
 export default class Login extends React.Component{
     render(){
@@ -11,18 +11,18 @@ export default class Login extends React.Component{
                 </View>
                 <View style={styles.loginContainer}>
                     <Text style={styles.loginText}>Login</Text>
-                    <TouchableHighlight onPress={this.loginUsingAzureAD.bind(this)} style={styles.loginButton}>
+                    <TouchableOpacity onPress={this.loginUsingAzureAD.bind(this)} style={styles.loginButton}>
                         <View style={styles.loginProviderContainer}>
                             <Image source={require('../assets/aad.png')} style={styles.loginProviderImage} />
                             <Text>via Azure Active Directory</Text>
                         </View>
-                    </TouchableHighlight>
-                    <TouchableHighlight onPress={this.loginUsingTwitter.bind(this)} style={styles.loginButton}>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this.loginUsingTwitter.bind(this)} style={styles.loginButton}>
                         <View style={styles.loginProviderContainer}>
                             <Image source={require('../assets/twitter.png')} style={styles.loginProviderImage} />
                             <Text>via Twitter</Text>
                         </View>
-                    </TouchableHighlight>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.blank}>
                     {/* Empty Space */}
