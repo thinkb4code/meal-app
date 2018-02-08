@@ -1,12 +1,13 @@
 import React from 'react';
-import {View, Text, ImageBackground, StyleSheet, TextInput, Switch, Picker, TouchableOpacity} from 'react-native';
+import {View, ScrollView, Text, ImageBackground, StyleSheet, TextInput, Switch, Picker, TouchableOpacity} from 'react-native';
 const AppConstants = require('../../service/constants');
 
 export default class ProfileConfig extends React.Component{
     constructor(props){
         super(props);
+        const {params} = this.props.navigation.state;
         this.state = {
-            id: `${this.props.provider}@${this.props.userId}`,
+            id: `${params.provider}@${params.userId}`,
             fullName: 'Manish Singh Rana',
             mobile: '9866062309',
             vegetarianOnly: true,
@@ -19,9 +20,10 @@ export default class ProfileConfig extends React.Component{
     saveProfile() {
         const headers = new Headers();
         const body = JSON.stringify(this.state);
-        headers.append('X-ZUMO-AUTH', this.props.apiKey);
+        headers.append('X-ZUMO-AUTH', this.props.navigation.state.params.apiKey);
         headers.append('ZUMO-API-VERSION', '2.0.0');
         headers.append('Content-Type', 'application/json');
+        const curr = this;
 
         fetch(AppConstants.UserProfile, 
             {
@@ -30,9 +32,11 @@ export default class ProfileConfig extends React.Component{
                 body: body
             }
         ).then((resp) => {
-            debugger;
             return resp.json().then((data) => {
-                debugger;
+                if(typeof(data) === "object"){
+                    curr.props.navigation.state.params.updateHomePage(data.vegetarianOnly);
+                    curr.props.navigation.goBack();
+                }
             });
         }).catch((error) => {
             debugger;
@@ -46,9 +50,9 @@ export default class ProfileConfig extends React.Component{
             <Text>{this.props.provider}</Text>
             <Text>{this.props.userId}</Text> */}
             <ImageBackground source={require('../../assets/app_bg.jpg')} style={styles.bgImage}>
-                <View style={[styles.container, styles.bgOverlapView]}>
+                <ScrollView style={[styles.bgOverlapView]}>
                     <Text style={styles.title}>Profile Settings</Text>
-                    {this.props.redirectViaHome && <Text>Please complete your profile first.</Text>}
+                    {this.props.navigation.state.params.redirectViaHome && <Text>Please complete your profile first.</Text>}
                     
                     <Text>Full Name</Text>
                     <TextInput onChangeText={(text) => this.setState({...this.state, fullName: text})} value={this.state.fullName} />
@@ -81,11 +85,11 @@ export default class ProfileConfig extends React.Component{
 
                     <Text>Desk or Ext. Number</Text>
                     <TextInput onChangeText={(text) => this.setState({...this.state, deskNumOrExtension: text})} value={this.state.deskNumOrExtension} />
-
-                    <TouchableOpacity onPress={this.saveProfile.bind(this)}>
+                    
+                    <TouchableOpacity style={styles.saveButton} onPress={this.saveProfile.bind(this)}>
                         <Text>Save</Text>
                     </TouchableOpacity>
-                </View>
+                </ScrollView>
             </ImageBackground>
         </View>;
     }
@@ -113,5 +117,8 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 30,
         paddingBottom: 20
+    },
+    saveButton: {
+        marginBottom: 40
     }
 });

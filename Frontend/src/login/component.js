@@ -1,7 +1,27 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, Image, TouchableOpacity, AsyncStorage} from 'react-native';
+import {NavigationActions} from 'react-navigation';
+const AppConstants = require('../service/constants');
 
 export default class Login extends React.Component{
+    componentWillMount(){
+		const curr = this;
+		AsyncStorage.getItem(AppConstants.APIAuthKey).then((token) => {
+			if(token !== null){
+                //curr.props.navigation.navigate('MainApp', {apiKey: token});
+                curr.props.navigation.dispatch(NavigationActions.reset(
+                    {
+                        index: 0, 
+                        key: null, 
+                        actions: [NavigationActions.navigate({routeName: 'MainApp', params: {apiKey: token}})]
+                    }
+                ));
+			}
+		}).catch((error) => {
+			// TODO Error Handling..
+		});
+    }
+    
     render(){
         return <View style={styles.container}>
             <Image style={styles.bgImage} source={require('../assets/app_bg.jpg')} />
@@ -32,11 +52,13 @@ export default class Login extends React.Component{
     }
 
     loginUsingAzureAD() {
-        this.props.openLogin('aad');
+        //this.props.openLogin('aad');
+        this.props.navigation.navigate('LoginPage', {url: AppConstants.AzureADLoginUrl});
     }
 
     loginUsingTwitter() {
-        this.props.openLogin('twitter');
+        // this.props.openLogin('twitter');
+        this.props.navigation.navigate('LoginPage', {url: AppConstants.TwitterLoginUrl});
     }
 }
 

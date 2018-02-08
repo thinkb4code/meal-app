@@ -1,5 +1,7 @@
 import React from 'react';
 import {View, Text, AsyncStorage, ActivityIndicator, StyleSheet} from 'react-native';
+
+import Menu from '../menu/component';
 const AppConstants = require('../../service/constants');
 
 export default class HomePage extends React.Component {
@@ -9,9 +11,11 @@ export default class HomePage extends React.Component {
         this.state = {
             userId: null,
             authProvider: null,
-			loading: true
+            loading: true,
+            vegOnly: false
         }
     }
+
     componentWillMount(){
         const curr = this;
         
@@ -31,6 +35,10 @@ export default class HomePage extends React.Component {
                 });
             }
         });
+    }
+
+    componentWillReceiveProps(newProps){
+        debugger;
     }
 
     getLocalAuthData(){
@@ -63,19 +71,27 @@ export default class HomePage extends React.Component {
     }
 
     checkUserProfileCreate(){
+        const {params} = this.props.navigation.state;
         const curr = this;
         const headers = new Headers();
-        headers.append('X-ZUMO-AUTH', this.props.apiKey);
+        headers.append('X-ZUMO-AUTH', params.apiKey);
         headers.append('ZUMO-API-VERSION', '2.0.0');
 
         fetch((AppConstants.UserProfile + `/${this.state.authProvider}@${this.state.userId}`), {headers: headers, method: 'GET'}).then((data) => {
             return data.json().then((profile) => {
                 if(profile.length <= 0 || profile.error){
-                    this.props.navToProfile(this.state.authProvider, this.state.userId);
+                    //this.props.navToProfile(this.state.authProvider, this.state.userId);
+                    curr.props.navigation.navigate('ProfileConfig', {
+                        apiKey: params.apiKey,
+                        provider: curr.state.authProvider,
+                        userId: curr.state.userId,
+                        redirectViaHome: true,
+                        updateHomePage: curr.updateThis.bind(curr)
+                    });
                     return;
                 }else {
                     curr.setState((prevState) => {
-                        return {...prevState, loading: false};
+                        return {...prevState, loading: false, vegOnly: profile.vegetarianOnly};
                     });
                 }
             }).catch((error) => {
@@ -95,17 +111,18 @@ export default class HomePage extends React.Component {
         });
     }
 
+    updateThis(vegOnly){
+        this.setState({...this.state, loading: !this.state.loading, vegOnly: vegOnly});
+    }
+
     render(){
+        const {params} = this.props.navigation.state;
         if(this.state.loading){
             return <View style={styles.container}>
                 <ActivityIndicator size='large' color='#0000ff' />
             </View>;
         }else {
-            return <View style={styles.container}>
-                <Text> {this.props.apiKey} </Text>
-                <Text> {this.state.userId} </Text>
-                <Text> {this.state.authProvider} </Text>
-            </View>;
+            return <Menu apiKey={params.apiKey} vegOnly={this.state.vegOnly} />;
         }
     }
 }
