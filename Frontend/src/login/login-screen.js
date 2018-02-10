@@ -6,14 +6,15 @@ const AppConstants = require('../service/constants');
 export default class LoginScreen extends React.Component {
     constructor(props){
         super(props);
+        this.saveApiKey.bind(this);
     }
 
-    async onNavChange(navState){
-        console.log(navState.url);
+    onNavChange(navState){
+        //console.log(navState.url);
         if(navState.url.indexOf('/.auth/login/done') > 0){
             const token = JSON.parse(decodeURIComponent(navState.url.split('#token=')[1]));
             if(token.authenticationToken !== undefined || token.authenticationToken !== null){
-                await this.saveApiKey(token.authenticationToken);
+                this.saveApiKey(token.authenticationToken);
             }
         }
     }

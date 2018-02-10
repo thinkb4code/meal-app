@@ -5,6 +5,8 @@ import Login from './src/login/component';
 import LoginScreen from './src/login/login-screen';
 import HomePage from './src/root-app/home/component';
 import ProfileConfig from './src/root-app/profile/component';
+import Menu from './src/root-app/menu/component';
+import ItemView from './src/root-app/menu/item-view';
 
 const MealApp = StackNavigator({
 	LoginProvider: {
@@ -26,10 +28,13 @@ const MealApp = StackNavigator({
 		}
 	},
 	MainApp: {
-		screen: HomePage,
-		navigationOptions: {
-			title: 'Menu'
-		}
+		screen: HomePage
+	},
+	MenuList: {
+		screen: Menu
+	},
+	ItemScreen: {
+		screen: ItemView
 	}
 }, {initialRouteName: 'LoginProvider'});
 

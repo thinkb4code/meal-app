@@ -1,10 +1,14 @@
 import React from 'react';
-import {View, Text, AsyncStorage, ActivityIndicator, StyleSheet} from 'react-native';
+import {View, Text, AsyncStorage, ActivityIndicator, StyleSheet, TouchableOpacity} from 'react-native';
 
 import Menu from '../menu/component';
 const AppConstants = require('../../service/constants');
 
 export default class HomePage extends React.Component {
+    static navigationOptions = {
+        title: 'Home',
+    };
+
     constructor(props){
         super(props);
 
@@ -12,8 +16,8 @@ export default class HomePage extends React.Component {
             userId: null,
             authProvider: null,
             loading: true,
-            vegOnly: false
-        }
+            vegOnly: false,
+        };
     }
 
     componentWillMount(){
@@ -93,6 +97,7 @@ export default class HomePage extends React.Component {
                     curr.setState((prevState) => {
                         return {...prevState, loading: false, vegOnly: profile.vegetarianOnly};
                     });
+                    curr.props.navigation.navigate('MenuList', {apiKey: params.apiKey, vegOnly: profile.vegetarianOnly});
                 }
             }).catch((error) => {
                 debugger;
@@ -113,6 +118,7 @@ export default class HomePage extends React.Component {
 
     updateThis(vegOnly){
         this.setState({...this.state, loading: !this.state.loading, vegOnly: vegOnly});
+        this.props.navigation.navigate('MenuList', {apiKey: params.apiKey, vegOnly: vegOnly});
     }
 
     render(){
@@ -122,7 +128,15 @@ export default class HomePage extends React.Component {
                 <ActivityIndicator size='large' color='#0000ff' />
             </View>;
         }else {
-            return <Menu apiKey={params.apiKey} vegOnly={this.state.vegOnly} />;
+            return <View style={styles.container}>
+                <Text style={styles.aboutText}>
+                    Some text about your coorporate application and its features. 
+                    Or we can create some tile base UI for opening New Order, Past Orders, Contact card etc.
+                </Text>
+                <TouchableOpacity style={styles.goButtom} onPress={() => {this.props.navigation.navigate('MenuList',{apiKey: params.apiKey, vegOnly: this.state.vegOnly})}}>
+                    <Text>Go to Menu!</Text>
+                </TouchableOpacity>
+            </View>;
         }
     }
 }
@@ -131,6 +145,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        padding: 10
+    },
+    aboutText: {
+        color: '#999'
+    },
+    goButtom: {
+        
     }
 });
