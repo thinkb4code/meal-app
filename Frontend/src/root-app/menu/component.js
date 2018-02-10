@@ -1,12 +1,16 @@
 import React from 'react';
 import {View, Text, StyleSheet, FlatList} from 'react-native';
+
 import ItemList from './item-list';
 import HttpService from '../../service/http_service';
+import NavigationCart from '../cart/navigation-cart';
 
 export default class Menu extends React.Component{
     static navigationOptions = {
         title: 'Menu',
+        headerRight: <NavigationCart />
     };
+    
     constructor(props){
         super(props);
         this.state = {

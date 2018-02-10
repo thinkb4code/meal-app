@@ -12,8 +12,8 @@ export default class ItemList extends React.Component {
                     </View>
                     <View style={styles.detailsContainer}>
                         <TouchableOpacity onPress={() => this.props.openItemCard(this.props.menuItem)}>
-                            <Text style={styles.itemName}>{this.props.menuItem.ItemName}</Text>
-                            <Text style={styles.itemDesc}>{this.props.menuItem.Description}</Text>
+                            <Text style={styles.itemName} numberOfLines={1} ellipsizeMode="tail">{this.props.menuItem.ItemName}</Text>
+                            <Text style={styles.itemDesc} numberOfLines={2} ellipsizeMode="tail">{this.props.menuItem.Description}</Text>
                         </TouchableOpacity>
                         <View style={styles.contolContainer}>
                             <Text style={[styles.faFamily, styles.control]}>&#xf146;</Text>
@@ -41,7 +41,8 @@ const styles = StyleSheet.create({
     },
     itemContainer: {
         flex: 1,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        backgroundColor: '#fff'
     },
     imageContainer: {
         flex: 1,
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
     contolContainer: {
         flex: 1,
         flexDirection: 'row',
-        marginTop: 10,
+        paddingTop: 10,
         justifyContent: 'center',
         alignItems: 'center'
     },

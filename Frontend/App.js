@@ -36,6 +36,9 @@ const MealApp = StackNavigator({
 	ItemScreen: {
 		screen: ItemView
 	}
-}, {initialRouteName: 'LoginProvider'});
+}, 
+{
+	initialRouteName: 'LoginProvider',
+});
 
 export default MealApp;

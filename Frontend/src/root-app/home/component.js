@@ -1,12 +1,18 @@
 import React from 'react';
 import {View, Text, AsyncStorage, ActivityIndicator, StyleSheet, TouchableOpacity} from 'react-native';
 
-import Menu from '../menu/component';
+import UserHome from './user-home';
+import AdminHome from './admin-home';
+import NavigationCart from '../cart/navigation-cart';
+
 const AppConstants = require('../../service/constants');
 
 export default class HomePage extends React.Component {
-    static navigationOptions = {
-        title: 'Home',
+    static navigationOptions = ({navigation}) => {
+        return {
+            title: 'Home',
+            headerRight: <NavigationCart />
+        };
     };
 
     constructor(props){
@@ -17,6 +23,8 @@ export default class HomePage extends React.Component {
             authProvider: null,
             loading: true,
             vegOnly: false,
+            isAdmin: false,
+            cartItems: []
         };
     }
 
@@ -95,9 +103,9 @@ export default class HomePage extends React.Component {
                     return;
                 }else {
                     curr.setState((prevState) => {
-                        return {...prevState, loading: false, vegOnly: profile.vegetarianOnly};
+                        return {...prevState, loading: false, vegOnly: profile.vegetarianOnly, isAdmin: profile.IsAdmin};
                     });
-                    curr.props.navigation.navigate('MenuList', {apiKey: params.apiKey, vegOnly: profile.vegetarianOnly});
+                    //curr.props.navigation.navigate('MenuList', {apiKey: params.apiKey, vegOnly: profile.vegetarianOnly});
                 }
             }).catch((error) => {
                 debugger;
@@ -118,7 +126,11 @@ export default class HomePage extends React.Component {
 
     updateThis(vegOnly){
         this.setState({...this.state, loading: !this.state.loading, vegOnly: vegOnly});
-        this.props.navigation.navigate('MenuList', {apiKey: params.apiKey, vegOnly: vegOnly});
+        //this.props.navigation.navigate('MenuList', {apiKey: params.apiKey, vegOnly: vegOnly});
+    }
+
+    navigateToView(viewName, viewParams){
+        this.props.navigation.navigate(viewName, viewParams);
     }
 
     render(){
@@ -128,15 +140,11 @@ export default class HomePage extends React.Component {
                 <ActivityIndicator size='large' color='#0000ff' />
             </View>;
         }else {
-            return <View style={styles.container}>
-                <Text style={styles.aboutText}>
-                    Some text about your coorporate application and its features. 
-                    Or we can create some tile base UI for opening New Order, Past Orders, Contact card etc.
-                </Text>
-                <TouchableOpacity style={styles.goButtom} onPress={() => {this.props.navigation.navigate('MenuList',{apiKey: params.apiKey, vegOnly: this.state.vegOnly})}}>
-                    <Text>Go to Menu!</Text>
-                </TouchableOpacity>
-            </View>;
+            if(this.state.isAdmin){
+                return <AdminHome apiKey={params.apiKey} openView={this.navigateToView.bind(this)} />;
+            }else {
+                return <UserHome apiKey={params.apiKey} openView={this.navigateToView.bind(this)} />;
+            }
         }
     }
 }
@@ -147,11 +155,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10
-    },
-    aboutText: {
-        color: '#999'
-    },
-    goButtom: {
-        
     }
 });
