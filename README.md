@@ -45,8 +45,8 @@ This application is consisting of two part, frontend developed using React-Nativ
 1. Make sure, you have Node.js environment setup in your system.
 1. Go to **Frontend** folder of this solution.
 2. Run the following commands
-...`npm install -g react react-native` to install React and React-Native as global package.
-...`npm install` to install all the required packages to run mobile application.
+   * `npm install -g react react-native` to install React and React-Native as global package.
+   * `npm install --save` to install all the required packages to run mobile application.
 3. Also run Command on React Native Project i.e. Frontend folder `react-native link` to link assets folder to Android and iOS project. This will link font-awesome font files to your resource folder (for both iOS and Android) so you can use them in project.
 4. Make sure your AVD is running, to test the application, run following command `react-native run-android` to test on Android AVD or `react-native run-ios` to test on iOS device.
 
