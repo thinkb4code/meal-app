@@ -2,8 +2,18 @@ import React from 'react';
 import {View, TouchableOpacity, Text, StyleSheet, Dimensions} from 'react-native';
 
 export default class CardList extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            width: Dimensions.get('window').width
+        };
+
+        Dimensions.addEventListener('change', (e) => {
+            this.setState({width: e.window.width});
+        });
+    }
     render(){
-        return <View style={styles.container}>
+        return <View style={[styles.container, {width: (this.state.width/2 - 20)}]}>
             <TouchableOpacity style={styles.button} onPress={() => this.props.openView(this.props.viewName, this.props.params)} >
                 <Text style={styles.cardIcon}>{this.props.icon}</Text>
                 <Text style={styles.cardText}>{this.props.text}</Text>
@@ -12,7 +22,6 @@ export default class CardList extends React.Component {
     }
 }
 
-const window = Dimensions.get('window');
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#fff',
@@ -20,7 +29,6 @@ const styles = StyleSheet.create({
         borderColor: '#dedede',
         borderRadius: 5,
         margin: 10,
-        width: (window.width/2 - 20),
         shadowColor: '#dedede',
         shadowOffset: {width: 5, height: 5},
         shadowOpacity: 1.0,

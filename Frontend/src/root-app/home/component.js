@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, AsyncStorage, ActivityIndicator, StyleSheet, TouchableOpacity} from 'react-native';
+import {NavigationActions} from 'react-navigation';
 
 import UserHome from './user-home';
 import AdminHome from './admin-home';
@@ -24,6 +25,7 @@ export default class HomePage extends React.Component {
             loading: true,
             vegOnly: false,
             isAdmin: false,
+            menuList: [],
             cartItems: []
         };
     }
@@ -133,6 +135,73 @@ export default class HomePage extends React.Component {
         this.props.navigation.navigate(viewName, viewParams);
     }
 
+    updateMenuList(menuList) {
+        this.setState({...this.state, menuList: menuList});
+    }
+
+    updateCartItem(screenKey, id, action, quantity){
+        const inCart = this.state.cartItems.filter((item) => {
+            return item.id === id;
+        });
+        let {cartItems} = this.state;
+        switch (action) {
+            case 'add':
+                if(inCart.length > 1){
+                    alert('Some error!! Multiple Item already in cart');
+                }else if(inCart.length === 1){
+                    // Increment Item
+                    cartItems = cartItems.map((item, index) => {
+                        if(item.id === id){
+                            item.qty += quantity;
+                        }
+
+                        return item;
+                    });
+                }else {
+                    // Add Item by one
+                    cartItems.push({id: id, qty: quantity});
+                }
+                break;
+            case 'remove':
+                debugger;
+                if(inCart.length > 1){
+                    alert('Some error!! Multiple Item already in cart');
+                }else if(inCart.length === 1){
+                    cartItems = cartItems.map((item, index) => {
+                        if(item.id === id){
+                            item.qty -= quantity;
+                            if(item.qty > 0){
+                                return item;
+                            }
+                        }else {
+                            return item;
+                        }
+                    });
+                }else {
+                    alert('Item not in cart!!');
+                }
+                break;
+            default:
+                alert('Unknown action');
+                break;
+        }
+
+        // Filter patch added as Remove function using Map which result 'undefined' in case of complete remove.
+        cartItems = cartItems.filter((item) => {
+            return item ? item : false;
+        });
+        
+        const updateParam = NavigationActions.setParams({
+            params: {inCartItems: cartItems},
+            key: screenKey
+        });
+        this.props.navigation.dispatch(updateParam);
+
+        this.setState((prevState) => {
+            return {...prevState, cartItems: cartItems};
+        });
+    }
+
     render(){
         const {params} = this.props.navigation.state;
         if(this.state.loading){
@@ -143,7 +212,12 @@ export default class HomePage extends React.Component {
             if(this.state.isAdmin){
                 return <AdminHome apiKey={params.apiKey} openView={this.navigateToView.bind(this)} />;
             }else {
-                return <UserHome apiKey={params.apiKey} openView={this.navigateToView.bind(this)} />;
+                return <UserHome 
+                    apiKey={params.apiKey} 
+                    openView={this.navigateToView.bind(this)} 
+                    updateMenuList={this.updateMenuList.bind(this)}
+                    updateCart={this.updateCartItem.bind(this)}
+                    inCartItems={this.state.cartItems} />;
             }
         }
     }

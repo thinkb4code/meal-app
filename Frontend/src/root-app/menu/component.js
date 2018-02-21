@@ -10,34 +10,60 @@ export default class Menu extends React.Component{
         title: 'Menu',
         headerRight: <NavigationCart />
     };
-    
+
     constructor(props){
         super(props);
         this.state = {
-            menuList: null
+            menuList: null,
+            update: 0
         };
     }
 
     async componentWillMount(){
         const {params} = this.props.navigation.state;
         const data = await HttpService.GetMenuItems(params.apiKey, params.vegOnly);
+        params.updateMenuList(data);
         this.setState((prevState) => {
             return {...prevState, menuList: data};
         });
     }
 
+    componentWillReceiveProps(newProps){
+        this.setState((prevState) => {
+            return {...prevState, update: (prevState.update+1) };
+        });
+    }
+
     openItemCard(item) {
-        this.props.navigation.navigate('ItemScreen', {item: item});
+        const {params} = this.props.navigation.state;
+        this.props.navigation.navigate('ItemScreen', {
+            item: item,
+            updateCart: params.updateCart,
+            inCart: params.inCartItems.filter((cartItem) => {return item.id === cartItem.id;})
+        });
     }
 
     render(){
+        const {params, key} = this.props.navigation.state;
         if(this.state.menuList === null){
             return <View style={styles.containerNoItem}>
                 <Text style={styles.noItem}>Please wait while loading the menu!</Text>
             </View>;
         }else {
             return <View style={styles.container}>
-                <FlatList data={this.state.menuList} keyExtractor={(item, index) => item.id} renderItem={({item}) => <ItemList menuItem={item} openItemCard={this.openItemCard.bind(this)} />} />
+                <FlatList 
+                    data={this.state.menuList} 
+                    extraData={this.state}
+                    keyExtractor={(item, index) => item.id} 
+                    renderItem={({item}) => 
+                        <ItemList 
+                            screenKey={key}
+                            menuItem={item} 
+                            openItemCard={this.openItemCard.bind(this)} 
+                            updateCart={params.updateCart}
+                            inCart={params.inCartItems.filter((cartItem) => {return item.id === cartItem.id;})}
+                        />}
+                />
             </View>;
         }
     }

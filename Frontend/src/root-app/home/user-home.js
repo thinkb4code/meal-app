@@ -7,7 +7,19 @@ export default class UserHome extends React.Component {
     render(){
         return <ScrollView>
             <View style={styles.container}>
-            <CardList icon="&#xf2e7;" text="Menu" openView={this.props.openView} viewName="MenuList" params={{apiKey: this.props.apiKey, vegOnly: false}} />
+            <CardList icon="&#xf2e7;" 
+                text="Menu" 
+                openView={this.props.openView} 
+                viewName="MenuList" 
+                params={
+                    {
+                        apiKey: this.props.apiKey, 
+                        vegOnly: false, 
+                        updateMenuList: this.props.updateMenuList,
+                        updateCart: this.props.updateCart,
+                        inCartItems: this.props.inCartItems
+                    }
+                } />
             <CardList icon="&#xf2e5;" text="Past Orders" openView={this.props.openView}/>
             <CardList icon="&#xf007;" text="Profile" openView={this.props.openView}/>
             </View>

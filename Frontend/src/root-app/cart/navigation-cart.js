@@ -6,7 +6,7 @@ export default class NavigationCart extends React.Component {
         return <TouchableOpacity style={styles.container}>
             <Text style={styles.cartIcon}>&#xf07a;</Text>
             <View style={styles.cartItems}>
-                <Text style={styles.cartCount}>0</Text>
+                <Text style={styles.cartCount}>00</Text>
             </View>
         </TouchableOpacity>;
     }
@@ -27,16 +27,16 @@ const styles = StyleSheet.create({
     cartItems: {
         position: 'absolute',
         backgroundColor: '#333',
-        width: 20,
-        height: 20,
-        top: 10,
-        right: 10,
-        borderRadius: 10,
+        width: 24,
+        height: 24,
+        top: 6,
+        right: 6,
+        borderRadius: 12,
         alignItems: 'center',
         justifyContent: 'center'
     },
     cartCount: {
-        fontSize: 10,
+        fontSize: 12,
         color: '#fff'
     }
 });

@@ -16,9 +16,19 @@ export default class ItemList extends React.Component {
                             <Text style={styles.itemDesc} numberOfLines={2} ellipsizeMode="tail">{this.props.menuItem.Description}</Text>
                         </TouchableOpacity>
                         <View style={styles.contolContainer}>
-                            <Text style={[styles.faFamily, styles.control]}>&#xf146;</Text>
-                            <Text style={styles.control}>22</Text>
-                            <Text style={[styles.faFamily, styles.control]}>&#xf0fe;</Text>
+                            <TouchableOpacity onPress={() => this.props.updateCart(this.props.screenKey, this.props.menuItem.id, 'remove', 1)}>
+                                <Text style={[styles.faFamily, styles.control]}>&#xf146;</Text>
+                            </TouchableOpacity>
+
+                            <Text style={[styles.control, {marginTop: -4}]}>
+                            {
+                                this.props.inCart && this.props.inCart.length == 1 ? this.props.inCart[0].qty : '0'
+                            }
+                            </Text>
+
+                            <TouchableOpacity onPress={() => this.props.updateCart(this.props.screenKey, this.props.menuItem.id, 'add', 1)}>
+                                <Text style={[styles.faFamily, styles.control]}>&#xf0fe;</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
 
@@ -47,6 +57,7 @@ const styles = StyleSheet.create({
     imageContainer: {
         flex: 1,
         padding: 2,
+        justifyContent: 'center'
     },
     itemImage: {
         flex: 1,
@@ -83,13 +94,14 @@ const styles = StyleSheet.create({
     contolContainer: {
         flex: 1,
         flexDirection: 'row',
-        paddingTop: 10,
+        paddingTop: 15,
+        paddingLeft: 15,
         justifyContent: 'center',
         alignItems: 'center'
     },
     control: {
         flex: 1,
         textAlign: 'center',
-        fontSize: 20
+        fontSize: 28
     }
 })
